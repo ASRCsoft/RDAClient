@@ -28,6 +28,34 @@ for i in range(100):
 
 #granuleQueue.append((g.egid, granuleURL, granuleFilename))
 
+class runManager(object):
+    def __init__(self):
+
+        self.dtStamp = dt.datetime.now()
+        self.dtStamp = self.dtStamp.replace(microsecond=0)
+
+        self.dtString = self.dtStamp.isoformat('T')
+        self.dtString = self.dtString.replace("-", "_")
+        self.dtString = self.dtString.replace(":", "_")
+
+        self.logfilename = "./RDAClient_" + self.dtString + ".log"
+
+        self.setLogFH(self.logfilename)
+        self.setCmdLineArgs()
+
+    def setLogFH(self, fname):
+        try:
+            self.logfh = open(fname, 'w')
+        except IOError:
+            EDClog.write("runManager::setLogFH\n")
+            EDClog.write("\t***ERROR: Could not open ECHO Data Client Log File ({})\n".format(fname))
+            raise SystemExit
+
+    def getLogFH(self):
+        return (self.logfh)
+
+
+
 def singledownload(url,filename):
 
     #	for egid, url, filename in self.granuleQueue:
@@ -145,4 +173,7 @@ def multidownload(granuleQueue):
 
 multidownload(granuleQueue)
 
-class FNLCollection():
+if __name__ == '__main__':
+
+    runMgr = runManager()
+    EDClog = runMgr.getLogFH()
